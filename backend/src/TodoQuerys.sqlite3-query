@@ -1,0 +1,5 @@
+-- database: ../todoDatabase.db
+
+SELECT * FROM users;
+
+DELETE FROM users WHERE email = 'user1@gmail.com';
