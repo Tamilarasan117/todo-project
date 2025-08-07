@@ -23,7 +23,20 @@ export const connectDatabase = async () => {
         password TEXT NOT NULL,
         created_at TIMESTAMP NULL,
         updated_at TIMESTAMP NULL
-      );`; 
+      );
+    `;
+
+    const todoSchema = `
+      CREATE TABLE IF NOT EXISTS todos (
+        id TEXT PRIMARY KEY,
+        task TEXT NOT NULL,
+        status TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        created_at TIMESTAMP NULL,
+        updated_at TIMESTAMP NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      );
+    `;
 
     database.run(userSchema, (error) => {
       if (error) {
@@ -31,7 +44,15 @@ export const connectDatabase = async () => {
       } else {
         console.log('users table created successfully.');
       }
-    }); 
+    });
+
+    database.run(todoSchema, (error) => {
+      if (error) {
+        console.log('Error while creating todos table.', error.message);
+      } else {
+        console.log('todos table created successfully.');
+      }
+    });
 
     return database;
   } catch (error) {

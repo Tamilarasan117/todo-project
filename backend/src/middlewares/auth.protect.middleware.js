@@ -7,9 +7,7 @@ export const authProtect = (request, response, next) => {
   try {
     const { accessToken } = request.cookies;
     if (!accessToken) {
-      return response
-        .status(401)
-        .json({ message: "Unauthorized: No token provided", type: "error" });
+      return response.status(401).json({ message: "Unauthorized: No token provided", type: "error" });
     }
 
     const decoded = jwt.verify(
@@ -22,20 +20,11 @@ export const authProtect = (request, response, next) => {
   } catch (error) {
     console.log("Unauthorized: ", error.message);
     if (error instanceof jwt.TokenExpiredError) {
-      return response.status(401).json({
-        message: "Unauthorized: Access token expired.",
-        type: "error",
-      });
+      return response.status(401).json({ message: "Unauthorized: Access token expired.", type: "error" });
     } else if (error instanceof jwt.JsonWebTokenError) {
-      return response.status(401).json({
-        message: "Unauthorized: Invalid access token.",
-        type: "error",
-      });
+      return response.status(401).json({ message: "Unauthorized: Invalid access token.", type: "error" });
     } else {
-      return response.status(500).json({
-        message: "Something went wrong during token verification.",
-        type: "error",
-      });
+      return response.status(500).json({ message: "Something went wrong during token verification.", type: "error" });
     }
   }
 };

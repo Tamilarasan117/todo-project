@@ -3,21 +3,17 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const generateTokens = (response, userData) => {
+const generateTokens = (response, userData) => {
   const accessToken = jwt.sign(
     { userId: userData.id },
     process.env.ACCESS_TOKEN_SECRET_KEY,
-    {
-      expiresIn: "1h",
-    }
+    { expiresIn: "1h" }
   );
 
   const refreshToken = jwt.sign(
     { userId: userData.id },
     process.env.REFRESH_TOKEN_SECRET_KEY,
-    {
-      expiresIn: "7d",
-    }
+    { expiresIn: "7d" }
   );
 
   response.cookie("accessToken", accessToken, {
@@ -36,3 +32,5 @@ export const generateTokens = (response, userData) => {
 
   return { accessToken, refreshToken };
 };
+
+export default generateTokens;

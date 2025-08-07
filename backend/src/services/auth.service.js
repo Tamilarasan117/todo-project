@@ -1,80 +1,72 @@
 import bcrypt from "bcrypt";
 import { getDatabase } from "../configs/dbConnection.js";
+import generateTimestamp from "../utils/geberateID.js";
 
 const authService = () => {
-  async function validateEmail(email) {
-    const regax = /^[a-zA-Z0-9._]+@[a-zA-Z-09.-]+\.[a-zA-Z]{2,}$/;
-
-    if (!regax.test(email)) {
-      return { message: "Not a valid email", type: "error" };
-    }
-    return false;
-  }
-
   async function getUserById(userId) {
-    const getUserQuery = "SELECT * FROM users WHERE id = ?;";
-    return await getDatabase().get(getUserQuery, [userId]);
+    try {
+      const selectQuery = "SELECT * FROM users WHERE id = ?;";
+      const result = getDatabase().get(selectQuery, [userId]);
+      return result;
+    } catch (error) {
+      console.log("Database error in getUserById: ", error.message);
+      throw new Error("Failed to fetch user.");
+    }
   }
 
   async function getUserByEamil(email) {
-    const getUserQuery = "SELECT * FROM users WHERE email = ?;";
-    return await getDatabase().get(getUserQuery, [email]);
-  }
-
-  function validatePassword(password) {
-    if (!/^(?=.*[A-Z])/.test(password)) {
-      return { message: "Atleast one upper case required", type: "error" };
+    try {
+      const selectQuery = "SELECT * FROM users WHERE email = ?;";
+      const result = getDatabase().get(selectQuery, [email]);
+      return result;
+    } catch (error) {
+      console.log("Database error in getUserByEmail: ", error.message);
+      throw new Error("Failed to fetch user");
     }
-
-    if (!/^(?=.*[a-z])/.test(password)) {
-      return { message: "Atleast one lower case required", type: "error" };
-    }
-
-    if (!/^(?=.*[0-9])/.test(password)) {
-      return { message: "Atleast one number required", type: "error" };
-    }
-
-    if (!/^(?=.*[~!@#$%^&*()_+])/.test(password)) {
-      return {
-        message: "Atleast one special character required",
-        type: "error",
-      };
-    }
-
-    if (!/^.{6,}/.test(password)) {
-      return { message: "Min 6 character required", type: "error" };
-    }
-
-    return null;
   }
 
   async function registerUser(username, email, password) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const createUserQuery = `
-      INSERT INTO users(id, username, email, password, created_at) VALUES(?, ?, ?, ?, ?);
-    `;
-    await getDatabase().run(createUserQuery, [
-      `U_${new Date().getTime()}`,
-      username,
-      email,
-      hashedPassword,
-      new Date().getTime(),
-    ]);
+    try {
+      const insertQuery = `
+        INSERT INTO users(id, username, email, password, created_at) VALUES(?, ?, ?, ?, ?);
+      `;
+      
+      const result = getDatabase().run(insertQuery, [
+        `U_${generateTimestamp(new Date())}`,
+        username,
+        email,
+        password,
+        generateTimestamp(new Date()),
+      ]);
+      return result;
+    } catch (error) {
+      console.log("Database error in registerUser: ", error.message);
+      throw new Error("Failed to register");
+    }
   }
 
   async function updateUser(email) {
-    const timestamp = new Date().getTime();
-    const updateUserQuery = `UPDATE users SET updated_at = ? WHERE email = ?;`;
-    await getDatabase().get(updateUserQuery, [timestamp, email]);
+    try {
+      const timestamp = generateTimestamp(new Date());
+      const updateQuery = `UPDATE users SET updated_at = ? WHERE email = ?;`;
+      const result = getDatabase().get(updateQuery, [timestamp, email]);
+      return result;
+    } catch (error) {
+      console.log("Database error in updateUser: ", error.message);
+      throw new Error("Failed to update user");
+    }
   }
 
   async function changeUserPassword(userId, password) {
-    const timestamp = new Date().getTime();
-    const hashPassword = await bcrypt.hash(password, 10);
-    const changePassQuery = `UPDATE users SET password = ?, updated_at = ? WHERE id = ?;`;
-
-    getDatabase().run(changePassQuery, [hashPassword, timestamp, userId]);
+    try {
+      const timestamp = generateTimestamp(new Date());
+      const updateQuery = `UPDATE users SET password = ?, updated_at = ? WHERE id = ?;`;
+      const result = getDatabase().run(updateQuery, [password, timestamp, userId]);
+      return result;
+    } catch (error) {
+      console.log('Database error in changeUserPassword: ', error.messgae);
+      throw new Error("Failed to change password");
+    }
   }
 
   return {
@@ -83,8 +75,6 @@ const authService = () => {
     getUserByEamil,
     registerUser,
     updateUser,
-    validateEmail,
-    validatePassword,
   };
 };
 
