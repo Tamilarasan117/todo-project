@@ -36,7 +36,7 @@ todoRouter.delete(
   deleteTodo
 );
 todoRouter.get(
-  "/todo/get-user-todo/:userId",
+  "/todo/get-user-todo",
   authProtect,
   validateUser,
   getUserTodo

@@ -6,7 +6,7 @@ export enum ApiTypings {
   CHANGE_PASSWORD_API = "auth/change-password",
 
   GET_ALL_TODO_API = "todo/get-all-todo",
-  ADD_TODO_API = "/todo/add-todo",
+  ADD_TODO_API = "todo/add-todo",
   UPDATE_TODO_API = "todo/update-todo",
   DELETE_TODO_API = "todo/delete-todo",
   GET_TODO_BY_USER_ID = "todo/get-user-todo",

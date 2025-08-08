@@ -2,7 +2,6 @@ import todoService from "../services/todo.service.js";
 
 const todoController = () => {
   const {
-    getTodoByTask,
     getTodoById,
     getTodoItems,
     addTodoItem,
@@ -12,6 +11,7 @@ const todoController = () => {
     getTodoItemByStatus,
     getTodoItemByDateRange,
   } = todoService();
+
   async function getAllTodo(request, response) {
     try {
       const todoItems = await getTodoItems();
@@ -73,7 +73,7 @@ const todoController = () => {
 
   async function getUserTodo(request, response) {
     try {
-      const { userId } = request.params;
+      const { userId } = request;
       const data = await getUserTodoItem(userId);
       return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "success" });
     } catch (error) {
@@ -97,7 +97,6 @@ const todoController = () => {
     try {
       const { start_date, end_date } = request.query;
       const data = await getTodoItemByDateRange(start_date, end_date);
-      console.log(data)
       return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "success" });
     } catch (error) {
       console.log("Error during fetch todo: ", error.message);

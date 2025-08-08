@@ -16,9 +16,9 @@ export const authRouter = express.Router();
 authRouter.post("/auth/register", validateRegister, register);
 authRouter.post("/auth/login", validateLogin, login);
 authRouter.post("/auth/logout", authProtect, logout);
-authRouter.post("/auth/refresh-token", authProtect, refreshToken);
+authRouter.post("/auth/refresh-token", refreshToken);
 authRouter.post(
-  "/auth/change-password/:userId",
+  "/auth/change-password",
   authProtect,
   validateUser,
   validateChangePassword,

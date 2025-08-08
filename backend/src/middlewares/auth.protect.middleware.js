@@ -5,10 +5,19 @@ dotenv.config();
 
 export const authProtect = (request, response, next) => {
   try {
-    const { accessToken } = request.cookies;
+    const authHeader = request.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return response.status(401).json({ message: "Unauthorized: No token provided or invalid format", type: "error" });
+    };
+
+    let accessToken = null;
+    if (authHeader !== undefined) {
+      accessToken = authHeader.split(' ')[1];
+    };
+    
     if (!accessToken) {
-      return response.status(401).json({ message: "Unauthorized: No token provided", type: "error" });
-    }
+      return response.status(401).json({ message: "Unauthorized: No token provided or invalid format", type: "error" });
+    };
 
     const decoded = jwt.verify(
       accessToken,

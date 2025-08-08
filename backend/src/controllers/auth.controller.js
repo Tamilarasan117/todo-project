@@ -41,10 +41,14 @@ const authController = () => {
 
       const matchPassword = await bcrypt.compare(password, userData.password);
       if (matchPassword) {
-        generateTokens(response, userData);
+        const { accessToken, refreshToken } = generateTokens(userData);
         await updateUser(email);
-
-        return response.status(200).json({ message: "Logged in successfully", type: "success", data: userData });
+        return response.status(200).json({
+          message: "Logged in successfully",
+          type: "success",
+          accessToken: accessToken,
+          refreshToken: refreshToken
+        });
       } else {
         return response.status(404).json({ message: "Invalid credintails", type: "error" });
       }
@@ -56,7 +60,6 @@ const authController = () => {
 
   const logout = async (request, response) => {
     try {
-      response.clearCookie("accessToken");
       response.status(200).json({ message: "Logged out successfully", type: "success" });
     } catch (error) {
       console.error("Error during logout:", error);
@@ -66,13 +69,13 @@ const authController = () => {
 
   const refreshToken = async (request, response) => {
     try {
-      const { refreshToken } = request.cookies;
-      if (!refreshToken) {
+      const { refreshToken: clientRefreshToken } = request.body;
+      if (!clientRefreshToken) {
         return response.status(401).json({ message: "Unauthorized: No token provided", type: "error" });
-      }
+      };
 
       const decoded = jwt.verify(
-        refreshToken,
+        clientRefreshToken,
         process.env.REFRESH_TOKEN_SECRET_KEY
       );
       const { userId } = decoded;
@@ -80,10 +83,15 @@ const authController = () => {
       const userData = await getUserById(userId);
       if (!userData) {
         return response.status(404).json({ message: "User not found", type: "error" });
-      }
+      };
 
-      generateTokens(response, userData);
-      return response.send(userData);
+      const { accessToken, refreshToken } = generateTokens(userData);
+      return response.status(200).json({
+        message: "Token refreshed successfully",
+        type: "success",
+        accessToken: accessToken,
+        refreshToken: refreshToken
+      });
     } catch (error) {
       console.error("Access token verification failed:", error);
       return response.status(403).json({ message: "Not authorized, access token failed.", type: "error" });
@@ -92,7 +100,7 @@ const authController = () => {
 
   const changePassword = async (request, response) => {
     try {
-      const { userId } = request.params;
+      const { userId } = request;
       const { newPassword } = request.body;
       const hashedPassword = await hashPassword(newPassword);
       

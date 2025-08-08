@@ -8,7 +8,7 @@ const todoService = () => {
       const result = getDatabase().get(selectQuery, [task]);
       return result;
     } catch (error) {
-      console.log('Database error in getTodoByTask: ', error.messgae);
+      console.log('Database error in getTodoByTask: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   };
@@ -19,7 +19,7 @@ const todoService = () => {
       const result = getDatabase().get(selectQuery, [todoId]);
       return result;
     } catch (error) {
-      console.log('Database error in getTodoById: ', error.messgae);
+      console.log('Database error in getTodoById: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   }
@@ -30,7 +30,7 @@ const todoService = () => {
       const result = getDatabase().all(selectQuery, []);
       return result;
     } catch (error) {
-      console.log('Database error in getTodoItems: ', error.messgae);
+      console.log('Database error in getTodoItems: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   };
@@ -53,7 +53,7 @@ const todoService = () => {
 
       return result;
     } catch (error) {
-      console.log('Database error in getTodoItem: ', error.messgae);
+      console.log('Database error in getTodoItem: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   };
@@ -74,7 +74,7 @@ const todoService = () => {
 
       return result;
     } catch (error) {
-      console.log('Database error in updateTodoItem: ', error.messgae);
+      console.log('Database error in updateTodoItem: ', error.message);
       throw new Error("Failed to update todo");
     }
   };
@@ -85,7 +85,7 @@ const todoService = () => {
       const result = getDatabase().run(deleteQuery, [todoId]);
       return result;
     } catch (error) {
-      console.log('Database error in deleteTodoItem: ', error.messgae);
+      console.log('Database error in deleteTodoItem: ', error.message);
       throw new Error("Failed to delete todo");
     }
   };
@@ -96,7 +96,7 @@ const todoService = () => {
       const result = getDatabase().all(selectQuery, [userId]);
       return result;
     } catch (error) {
-      console.log('Database error in getUserTodoItem: ', error.messgae);
+      console.log('Database error in getUserTodoItem: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   }
@@ -107,7 +107,7 @@ const todoService = () => {
       const result = getDatabase().all(selectQuery, [status]);
       return result;
     } catch (error) {
-      console.log('Database error in getTodoItemByStatus: ', error.messgae);
+      console.log('Database error in getTodoItemByStatus: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   }
@@ -118,7 +118,7 @@ const todoService = () => {
       const result = getDatabase().all(selectQuery, [start_date, end_date]);
       return result;
     } catch (error) {
-      console.log('Database error in getTodoItemByDateRange: ', error.messgae);
+      console.log('Database error in getTodoItemByDateRange: ', error.message);
       throw new Error("Failed to fetch todo");
     }
   };

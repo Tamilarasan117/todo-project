@@ -93,7 +93,7 @@ export const validateChangePassword = async (request, response, next) => {
     return response.status(400).json({ message: "Please provid required fields", type: "error" });
   };
 
-  const { userId } = request.params;
+  const { userId } = request;
   const user = await getUserById(userId);
   const matchPassword = await bcrypt.compare(oldPassword, user.password);
   if (!matchPassword) {

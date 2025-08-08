@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import { getDatabase } from "../configs/dbConnection.js";
 import generateTimestamp from "../utils/geberateID.js";
 
@@ -49,7 +48,7 @@ const authService = () => {
     try {
       const timestamp = generateTimestamp(new Date());
       const updateQuery = `UPDATE users SET updated_at = ? WHERE email = ?;`;
-      const result = getDatabase().get(updateQuery, [timestamp, email]);
+      const result = getDatabase().run(updateQuery, [timestamp, email]);
       return result;
     } catch (error) {
       console.log("Database error in updateUser: ", error.message);
@@ -64,7 +63,7 @@ const authService = () => {
       const result = getDatabase().run(updateQuery, [password, timestamp, userId]);
       return result;
     } catch (error) {
-      console.log('Database error in changeUserPassword: ', error.messgae);
+      console.log('Database error in changeUserPassword: ', error.message);
       throw new Error("Failed to change password");
     }
   }
