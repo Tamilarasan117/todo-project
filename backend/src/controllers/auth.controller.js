@@ -23,10 +23,10 @@ const authController = () => {
 
       await registerUser(username, email, hashedPassword);
       
-      return response.status(200).json({ message: "Account created successfully", type: "success" });
+      return response.status(200).json({ message: "Account created successfully", type: "SUCCESS" });
     } catch (error) {
       console.error("Error during registration:", error);
-      return response.status(500).json({ message: "Something went wrong during registering", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -36,7 +36,7 @@ const authController = () => {
 
       const userData = await getUserByEamil(email);
       if (!userData) {
-        return response.status(404).json({ message: "Invalid credintails", type: "error" });
+        return response.status(404).json({ message: "Invalid credintails", type: "ERROR" });
       }
 
       const matchPassword = await bcrypt.compare(password, userData.password);
@@ -44,26 +44,26 @@ const authController = () => {
         const { accessToken, refreshToken } = generateTokens(userData);
         await updateUser(email);
         return response.status(200).json({
-          message: "Logged in successfully",
-          type: "success",
+          message: "User successfully logged in",
+          type: "SUCCESS",
           accessToken: accessToken,
           refreshToken: refreshToken
         });
       } else {
-        return response.status(404).json({ message: "Invalid credintails", type: "error" });
+        return response.status(404).json({ message: "Invalid credintails", type: "ERROR" });
       }
     } catch (error) {
       console.error("Error during login:", error);
-      return response.status(500).json({ message: "Something went wrong during login", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
   const logout = async (request, response) => {
     try {
-      response.status(200).json({ message: "Logged out successfully", type: "success" });
+      response.status(200).json({ message: "User successfully logged out", type: "SUCCESS" });
     } catch (error) {
       console.error("Error during logout:", error);
-      return response.status(500).json({ message: "Something went wrong during logout", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -71,7 +71,7 @@ const authController = () => {
     try {
       const { refreshToken: clientRefreshToken } = request.body;
       if (!clientRefreshToken) {
-        return response.status(401).json({ message: "Unauthorized: No token provided", type: "error" });
+        return response.status(401).json({ message: "Unauthorized	No refresh token provided by the client", type: "ERROR" });
       };
 
       const decoded = jwt.verify(
@@ -82,19 +82,19 @@ const authController = () => {
 
       const userData = await getUserById(userId);
       if (!userData) {
-        return response.status(404).json({ message: "User not found", type: "error" });
+        return response.status(404).json({ message: "User not found", type: "ERROR" });
       };
 
       const { accessToken, refreshToken } = generateTokens(userData);
       return response.status(200).json({
-        message: "Token refreshed successfully",
-        type: "success",
+        message: "Access token successfully refreshed",
+        type: "SUCCESS",
         accessToken: accessToken,
         refreshToken: refreshToken
       });
     } catch (error) {
       console.error("Access token verification failed:", error);
-      return response.status(403).json({ message: "Not authorized, access token failed.", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -106,10 +106,10 @@ const authController = () => {
       
       await changeUserPassword(userId, hashedPassword);
 
-      return response.status(200).json({ message: "Password changed successfully", type: "success" });
+      return response.status(200).json({ message: "User password successfully changed", type: "SUCCESS" });
     } catch (error) {
       console.error("Error during change password:", error);
-      return response.status(500).json({ message: "Something went wrong during change password", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 

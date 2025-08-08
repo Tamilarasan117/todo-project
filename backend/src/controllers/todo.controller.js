@@ -15,10 +15,10 @@ const todoController = () => {
   async function getAllTodo(request, response) {
     try {
       const todoItems = await getTodoItems();
-      return response.status(200).json({ data: todoItems, message: "Todo items fetched successfully", type: "success" });
+      return response.status(200).json({ data: todoItems, message: "Successfully fetched all tasks", type: "SUCCESS" });
     } catch (error) {
       console.log("Error during fetching todo items: ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -33,10 +33,10 @@ const todoController = () => {
         user_id: userId
       });
 
-      return response.status(200).json({ message: "Todo item created successfully", type: "success" });
+      return response.status(200).json({ message: "Successfully created a new task", type: "SUCCESS" });
     } catch (error) {
       console.log("Error during create new todo ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -48,13 +48,13 @@ const todoController = () => {
       const todo = await getTodoById(todoId);
       if (todo) {
         await updateTodoItem(data, todoId);
-        return response.status(200).json({ message: "Task updated successfully" })
+        return response.status(200).json({ message: "Successfully updated the task", type: "SUCCESS" })
       } else {
-        return response.status(404).json({ message: "Todo item not found", type: "error" });
+        return response.status(404).json({ message: "Todo item not found", type: "ERROR" });
       }
     } catch (error) {
       console.log("Error during update todo ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -64,10 +64,10 @@ const todoController = () => {
 
       await deleteTodoItem(todoId);
 
-      response.status(200).json({ message: "Todo item deleted successfully", type: "success" });
+      response.status(200).json({ message: "Todo item deleted successfully", type: "SUCCESS" });
     } catch (error) {
       console.log("Error during delete todo ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -75,10 +75,10 @@ const todoController = () => {
     try {
       const { userId } = request;
       const data = await getUserTodoItem(userId);
-      return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "success" });
+      return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "SUCCESS" });
     } catch (error) {
       console.log("Error during fetch user todo ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -86,10 +86,10 @@ const todoController = () => {
     try {
       const status = request.query.status;
       const data = await getTodoItemByStatus(status);
-      return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "success" });
+      return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "SUCCESS" });
     } catch (error) {
       console.log("Error during fetch todo: ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 
@@ -97,10 +97,10 @@ const todoController = () => {
     try {
       const { start_date, end_date } = request.query;
       const data = await getTodoItemByDateRange(start_date, end_date);
-      return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "success" });
+      return response.status(200).json({ data: data, message: "Todo item fetched successfully", type: "SUCCESS" });
     } catch (error) {
       console.log("Error during fetch todo: ", error.message);
-      return response.status(500).json({ message: "Internal server error", type: "error" });
+      return response.status(500).json({ message: "Internal server error", type: "ERROR" });
     }
   };
 

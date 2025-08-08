@@ -10,23 +10,23 @@ function validateEmail(email) {
 
 function validatePassword(password) {
   if (!/^(?=.*[A-Z])/.test(password)) {
-    return { message: "Atleast one upper case required", type: "error" };
+    return { message: "Atleast one upper case required", type: "ERROR" };
   }
 
   if (!/^(?=.*[a-z])/.test(password)) {
-    return { message: "Atleast one lower case required", type: "error" };
+    return { message: "Atleast one lower case required", type: "ERROR" };
   }
 
   if (!/^(?=.*[0-9])/.test(password)) {
-    return { message: "Atleast one number required", type: "error" };
+    return { message: "Atleast one number required", type: "ERROR" };
   }
 
   if (!/^(?=.*[~!@#$%^&*()_+])/.test(password)) {
-    return { message: "Atleast one special character required", type: "error" };
+    return { message: "Atleast one special character required", type: "ERROR" };
   }
 
   if (!/^.{6,}/.test(password)) {
-    return { message: "Min 6 character required", type: "error" };
+    return { message: "Min 6 character required", type: "ERROR" };
   }
 
   return null;
@@ -38,7 +38,7 @@ export const validateUser = async (request, response, next) => {
   
   const user = await getUserById(userId ?? user_id);
   if (!user) {
-    return response.status(404).json({ message: "User not found", type: "error" });
+    return response.status(404).json({ message: "User not found", type: "ERROR" });
   };
 
   next();
@@ -47,17 +47,17 @@ export const validateUser = async (request, response, next) => {
 export const validateRegister = async (request, response, next) => {
   const { username, email, password, confirmPassword } = request.body;
   if (!username || !email || !password || !confirmPassword) {
-    return response.status(400).json({ message: "Please provide required fields", type: "error" });
+    return response.status(400).json({ message: "Please provide required fields", type: "ERROR" });
   };
 
   const isValidEmail = validateEmail(email);
   if (!isValidEmail) {
-    return response.status(400).json({ message: "Invalid email address", type: "error" });
+    return response.status(400).json({ message: "Invalid email address", type: "ERROR" });
   };
 
   const existUser = await getUserByEamil(email);
   if (existUser) {
-    return response.status(409).json({ message: "Email already exist", type: "error" });
+    return response.status(400).json({ message: "Email already exist", type: "ERROR" });
   };
 
   const passwordError = validatePassword(password);
@@ -67,7 +67,7 @@ export const validateRegister = async (request, response, next) => {
 
   const isPasswordMatch = password !== confirmPassword;
   if (isPasswordMatch) {
-    return response.status(400).json({ message: "Password not matching", type: "error" });
+    return response.status(400).json({ message: "Password not matching", type: "ERROR" });
   };
 
   next();
@@ -76,12 +76,12 @@ export const validateRegister = async (request, response, next) => {
 export const validateLogin = async (request, response, next) => {
   const { email, password } = request.body;
   if (!email || !password) {
-    return response.status(400).json({ message: "PLease provide required fields", type: "error" });
+    return response.status(400).json({ message: "PLease provide required fields", type: "ERROR" });
   };
 
   const isValidEmail = validateEmail(email);
   if (!isValidEmail) {
-    return response.status(400).json({ message: "Invalid email address", type: "error" });
+    return response.status(400).json({ message: "Invalid email address", type: "ERROR" });
   };
 
   next();
@@ -90,14 +90,14 @@ export const validateLogin = async (request, response, next) => {
 export const validateChangePassword = async (request, response, next) => {
   const { oldPassword, newPassword, confirmPassword } = request.body;
   if (!oldPassword || !newPassword || !confirmPassword) {
-    return response.status(400).json({ message: "Please provid required fields", type: "error" });
+    return response.status(400).json({ message: "Please provid required fields", type: "ERROR" });
   };
 
   const { userId } = request;
   const user = await getUserById(userId);
   const matchPassword = await bcrypt.compare(oldPassword, user.password);
   if (!matchPassword) {
-    return response.status(400).json({ message: "Invalid old password", type: "error" });
+    return response.status(400).json({ message: "Invalid old password", type: "ERROR" });
   };
 
   const passwordError = validatePassword(newPassword);
@@ -107,7 +107,7 @@ export const validateChangePassword = async (request, response, next) => {
 
   const isPasswordMatch = newPassword !== confirmPassword;
   if (isPasswordMatch) {
-    return response.status(400).json({ message: "Password not matching", type: "error" });
+    return response.status(400).json({ message: "Password not matching", type: "ERROR" });
   };
 
   next();

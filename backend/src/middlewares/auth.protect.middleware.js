@@ -7,7 +7,7 @@ export const authProtect = (request, response, next) => {
   try {
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return response.status(401).json({ message: "Unauthorized: No token provided or invalid format", type: "error" });
+      return response.status(401).json({ message: "Unauthorized: No token provided or invalid format", type: "ERROR" });
     };
 
     let accessToken = null;
@@ -16,7 +16,7 @@ export const authProtect = (request, response, next) => {
     };
     
     if (!accessToken) {
-      return response.status(401).json({ message: "Unauthorized: No token provided or invalid format", type: "error" });
+      return response.status(401).json({ message: "Unauthorized: No token provided or invalid format", type: "ERROR" });
     };
 
     const decoded = jwt.verify(
@@ -29,11 +29,11 @@ export const authProtect = (request, response, next) => {
   } catch (error) {
     console.log("Unauthorized: ", error.message);
     if (error instanceof jwt.TokenExpiredError) {
-      return response.status(401).json({ message: "Unauthorized: Access token expired.", type: "error" });
+      return response.status(401).json({ message: "Unauthorized: Access token expired.", type: "ERROR" });
     } else if (error instanceof jwt.JsonWebTokenError) {
-      return response.status(401).json({ message: "Unauthorized: Invalid access token.", type: "error" });
+      return response.status(401).json({ message: "Unauthorized: Invalid access token.", type: "ERROR" });
     } else {
-      return response.status(500).json({ message: "Something went wrong during token verification.", type: "error" });
+      return response.status(500).json({ message: "Something went wrong during token verification.", type: "ERROR" });
     }
   }
 };
